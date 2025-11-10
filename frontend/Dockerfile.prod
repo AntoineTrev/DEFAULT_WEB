@@ -1,0 +1,23 @@
+# Étape 1 : Build du site Vue
+FROM node:20 AS build
+WORKDIR /frontend
+COPY package*.json ./
+RUN yarn install --frozen-lockfile
+COPY . .
+
+ARG VITE_BACKEND_PORT
+ARG VITE_BACKEND_ADMIN_EMAIL
+ARG VITE_BACKEND_ADMIN_PASSWORD
+ARG VITE_FRONTEND_PORT
+ENV VITE_BACKEND_PORT=$VITE_BACKEND_PORT
+ENV VITE_BACKEND_ADMIN_EMAIL=$VITE_BACKEND_ADMIN_EMAIL
+ENV VITE_BACKEND_ADMIN_PASSWORD=$VITE_BACKEND_ADMIN_PASSWORD
+ENV VITE_FRONTEND_PORT=$VITE_FRONTEND_PORT
+
+RUN yarn build
+
+# Étape 2 : Serveur Caddy
+FROM caddy:latest
+COPY --from=build /frontend/dist /var/www/html
+COPY Caddyfile /etc/caddy/Caddyfile
+EXPOSE 80

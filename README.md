@@ -28,8 +28,8 @@ Create a `.env` file at the root of the project base on `.env.template`:
 
 ```env
 # Frontend
-VITE_FRONTEND_PORT=8080
-VITE_OPEN_BROWSER=false
+FRONTEND_PORT=8080
+FRONTEND_OPEN_BROWSER=false
 
 # Backend
 BACKEND_PORT=8081
