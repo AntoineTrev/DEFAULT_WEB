@@ -1,0 +1,23 @@
+:80 {
+    root * /var/www/html
+    encode gzip zstd
+    file_server
+
+    try_files {path} /index.html
+
+    @staticFiles {
+        path_regexp \.(ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|wasm)$
+    }
+    header @staticFiles Cache-Control "public, max-age=2592000"  # 30 jours
+
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+    }
+
+    log {
+        output stdout
+        level INFO
+    }
+}

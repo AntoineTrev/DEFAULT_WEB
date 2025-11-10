@@ -1,0 +1,22 @@
+{
+    "formatter": {
+        "printWidth": 100,
+        "useTabs": false
+    },
+    "linter": {
+        "ignorePatterns": ["dist/**", "node_modules/**"],
+        "rules": {
+            "curly": "error",
+            "eqeqeq": ["error", "always"],
+            "no-undef": "error",
+            "no-unused-vars": "error",
+            "quotes": ["error", "single"],
+            "semi": ["error", "always"]
+        }
+    },
+    "transform": {
+        "jsx": "preserve",
+        "minify": false,
+        "target": "es2022"
+    }
+}
