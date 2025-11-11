@@ -1,4 +1,4 @@
-# Fullstack Vue 3 + PocketBase Project
+# Fullstack Vite/Vue 3/Typescript + Pinia-Colada + PocketBase Project
 
 This repository contains a fullstack web application with a **Vue 3 frontend** and a **PocketBase backend**, fully containerized with Docker and orchestrated via Docker Compose. Pre-commit hooks, linting, formatting, and type-checking are included.
 

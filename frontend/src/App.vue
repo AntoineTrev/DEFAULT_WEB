@@ -1,41 +1,53 @@
 <template>
-    <main class="container">
+    <main>
         <h1>Site Web</h1>
-        {{ users }}
-        <button @click="featchUsers">refresh</button>
+        <br />
+        <span>isValid : {{ isValid }}</span>
+        <br />
+        <span>isSuperuser : {{ isSuperuser }}</span>
+        <br />
+        <span>{{ status }}</span>
+        <br />
+        <span>isPlaceholderData : {{ isPlaceholderData }}</span>
+        <br />
+        <span>Page {{ page }}/{{ totalPages }}</span>
+        <br />
+        <span>Items {{ perPage }}/{{ totalItems }}</span>
+        <br />
+        <button @click="refetch">Refetch</button>
+        <br />
+        <span v-if="isLoading || isPending">Loading...</span>
+        <span v-else-if="error">Error : {{ error.message }}</span>
+        <span v-else-if="!users || users.length === 0">No user found !</span>
+        <ul v-else>
+            <li
+                v-for="user in users"
+                :key="user.id">
+                <pre>{{ user }}</pre>
+            </li>
+        </ul>
     </main>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import PocketBase from 'pocketbase'
-import { getPocketClient, pb } from '@/core/pocketbase'
+import { computed } from 'vue'
+import User from '@/schema/User.ts'
+import { pb } from '@/services/pocketbase'
 
-const users = ref<unknown[]>([])
+const {
+    data: users,
+    isLoading,
+    error,
+    status,
+    isPending,
+    isPlaceholderData,
+    page,
+    totalPages,
+    perPage,
+    totalItems,
+    refetch,
+} = User.useRead({ page: 2, perPage: 5, sortField: 'updated', sortOrder: -1 })
 
-onMounted(async () => {
-    const pocketbase = await getPocketClient()
-
-    await featchUsers(pocketbase)
-})
-
-const featchUsers = async (pocketbase: PocketBase | undefined = undefined): Promise<unknown[]> => {
-    if (!pocketbase) {
-        pocketbase = pb()
-    }
-    const response = await pocketbase.collection('users').getFullList()
-    console.log(response)
-    users.value = response
-    return response
-}
+const isValid = computed(() => pb().authStore.isValid)
+const isSuperuser = computed(() => pb().authStore.isSuperuser)
 </script>
-
-<style scoped>
-.container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>
