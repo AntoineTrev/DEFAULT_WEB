@@ -1,0 +1,8 @@
+FROM ghcr.io/muchobien/pocketbase:latest
+USER root
+RUN apk add --no-cache curl jq
+COPY entrypoint.sh /entrypoint.sh
+COPY fixtures/ /fixtures/
+COPY entrypoint.with-fixtures.sh /entrypoint.with-fixtures.sh
+RUN chmod +x /entrypoint.sh /entrypoint.with-fixtures.sh
+ENTRYPOINT ["/entrypoint.with-fixtures.sh"]

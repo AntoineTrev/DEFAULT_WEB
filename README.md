@@ -50,10 +50,16 @@ BACKEND_ADMIN_PASSWORD=
 
 ## Building for Production
 
-### Docker
+### Docker Dev (with users fixtures)
 
 ```bash
-docker-compose up --build
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+### Docker Prod
+
+```bash
+docker-compose -f docker-compose.prod.yml up --build
 ```
 
 * Frontend: `http://localhost:8080`

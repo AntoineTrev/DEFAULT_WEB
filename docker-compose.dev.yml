@@ -29,7 +29,9 @@ services:
       backend:
         condition: service_healthy
   backend:
-    image: ghcr.io/muchobien/pocketbase:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
     container_name: backend
     restart: unless-stopped
     ports:
@@ -39,7 +41,6 @@ services:
       - ./backend/pb_public:/pb_public
       - ./backend/pb_migrations:/pb_migrations
       - ./backend/pb_hooks:/pb_hooks
-      - ./backend/entrypoint.sh:/entrypoint.sh
     env_file:
       - .env
     networks:
@@ -50,7 +51,7 @@ services:
       timeout: 20s
       retries: 5
       start_period: 10s
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/entrypoint.with-fixtures.sh"]
 
 networks:
   web_network:

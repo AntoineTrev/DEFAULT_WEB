@@ -13,7 +13,7 @@ export async function getPocketClient(): Promise<PocketBase> {
 
     try {
         if (!_pb.authStore.isValid) {
-            await _pb.admins.authWithPassword(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD)
+            await _pb.collection('_superusers').authWithPassword(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD)
             console.log('[PocketBase] Auth OK:', DEFAULT_ADMIN_EMAIL)
         }
     } catch (err) {

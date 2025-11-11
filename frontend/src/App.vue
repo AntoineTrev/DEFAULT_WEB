@@ -8,24 +8,25 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import PocketBase from 'pocketbase'
 import { getPocketClient, pb } from '@/core/pocketbase'
 
 const users = ref<unknown[]>([])
 
 onMounted(async () => {
-    await getPocketClient()
+    const pocketbase = await getPocketClient()
 
-    featchUsers()
+    await featchUsers(pocketbase)
 })
 
-const featchUsers = () => {
-    pb()
-        .collection('users')
-        .getFullList()
-        .then(response => {
-            console.log('Successfull load ', response.length, ' users.')
-            users.value = response
-        })
+const featchUsers = async (pocketbase: PocketBase | undefined = undefined): Promise<unknown[]> => {
+    if (!pocketbase) {
+        pocketbase = pb()
+    }
+    const response = await pocketbase.collection('users').getFullList()
+    console.log(response)
+    users.value = response
+    return response
 }
 </script>
 
