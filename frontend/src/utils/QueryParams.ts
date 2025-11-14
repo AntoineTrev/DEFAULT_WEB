@@ -1,28 +1,31 @@
-// src/pocket/pbQueryBuilder.ts
+import { type Ref } from 'vue'
+
 export interface QueryParams {
-    page?: number
-    perPage?: number
-    sortField?: string
-    sortOrder?: number // 1 asc, -1 desc
-    filter?: string
+    page?: Ref<number>
+    perPage?: Ref<number>
+    sortField?: Ref<string>
+    sortOrder?: Ref<number> // 1 asc, -1 desc
+    filters?: Ref<string>
     searchableFields?: string[] // pour filtre global
 }
 
 function buildQueryOptions(params: QueryParams) {
-    const page = params.page ?? 1
-    const perPage = params.perPage ?? 10
+    const page = params.page?.value ?? 1
+    const perPage = params.perPage?.value ?? 10
 
-    const sort = params.sortField ? `${params.sortOrder === -1 ? '-' : ''}${params.sortField}` : '-created'
+    const sort = params.sortField?.value
+        ? `${params.sortOrder?.value === -1 ? '-' : ''}${params.sortField.value}`
+        : '-created'
 
-    let filter = ''
-    if (params.filter && params.searchableFields?.length) {
-        const q = params.searchableFields.map(f => `${f}~"${params.filter?.replace(/"/g, '\\"')}"`).join(' || ')
-        filter = q
-    } else if (params.filter) {
-        filter = params.filter
+    let filters = ''
+    if (params.filters && params.searchableFields?.length) {
+        const q = params.searchableFields.map(f => `${f}~"${params.filters?.value?.replace(/"/g, '\\"')}"`).join(' || ')
+        filters = q
+    } else if (params.filters) {
+        filters = params.filters.value
     }
 
-    return { page, perPage, sort, filter }
+    return { page, perPage, sort, filters }
 }
 
 export default buildQueryOptions

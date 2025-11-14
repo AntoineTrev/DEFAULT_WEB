@@ -528,6 +528,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@primeuix/themes@npm:^1.2.5":
+  version: 1.2.5
+  resolution: "@primeuix/themes@npm:1.2.5"
+  dependencies:
+    "@primeuix/styled": "npm:^0.7.3"
+  checksum: 10c0/695c78e179b2c1d453ca18e3ddcbc3821231b151c5d3c7f6e491738a821b59baa539a5dfa5a8c88919bc16184a4ceaec429f4143657c2a49cf1c1389e8855ede
+  languageName: node
+  linkType: hard
+
 "@primeuix/utils@npm:^0.6.1":
   version: 0.6.2
   resolution: "@primeuix/utils@npm:0.6.2"
@@ -677,6 +686,13 @@ __metadata:
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: 10c0/b255094f293794c6d2289300c5fbcafbb5532a3aed3a5ffd2f8dc1828e639b88d75f6a376dd8f94347a44813fd7a7149d8463477a9a49525c8b2dcaa38c2d1e8
+  languageName: node
+  linkType: hard
+
+"@types/add@npm:^2":
+  version: 2.0.3
+  resolution: "@types/add@npm:2.0.3"
+  checksum: 10c0/d18841b43d3799f69db0bdae380d19d05f43b716315c5bfd4d6c1b3467bada2644eab8c04bb5afdb94bba87604da06d466f22fe30df6bcf0518c373593bb474a
   languageName: node
   linkType: hard
 
@@ -1102,6 +1118,13 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 10c0/dec73ff59b7d6628a01eebaece7f2bdb8bb62b9b5926dcad0f8931f2b8b79c2be21f6c68ac095592adb5adb15831a3635d9343e6a91d028bbe85d564875ec3ec
+  languageName: node
+  linkType: hard
+
+"add@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "add@npm:2.0.6"
+  checksum: 10c0/6b21d5f2e58cf5e15d56cc6f9ebce04f04f4c33ae25f09d600ddacf8df00036ba521f17feb1b3f81307b7c6d2ef0bed8b511a0f86f062eb90c2f909b48b588ae
   languageName: node
   linkType: hard
 
@@ -1754,11 +1777,15 @@ __metadata:
   resolution: "frontend@workspace:."
   dependencies:
     "@pinia/colada": "npm:^0.17.8"
+    "@primeuix/styles": "npm:^1.2.5"
+    "@primeuix/themes": "npm:^1.2.5"
+    "@types/add": "npm:^2"
     "@types/node": "npm:24.10.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.44.0"
     "@typescript-eslint/parser": "npm:^8.44.0"
     "@vitejs/plugin-vue": "npm:^6.0.1"
     "@vue/tsconfig": "npm:^0.8.1"
+    add: "npm:^2.0.6"
     eslint: "npm:^9.36.0"
     eslint-plugin-vue: "npm:^10.4.0"
     husky: "npm:^9.1.7"
@@ -1769,6 +1796,7 @@ __metadata:
     prettier: "npm:^3.0.0"
     prettier-plugin-package: "npm:^2.0.0"
     prettier-plugin-sort-json: "npm:^4.1.1"
+    primeicons: "npm:^7.0.0"
     primevue: "npm:^4.4.1"
     sass: "npm:^1.92.1"
     typescript: "npm:^5.9.3"
@@ -1776,6 +1804,7 @@ __metadata:
     vue: "npm:^3.5.21"
     vue-eslint-parser: "npm:^10"
     vue-tsc: "npm:^3.1.3"
+    yarn: "npm:^1.22.22"
   languageName: unknown
   linkType: soft
 
@@ -2787,6 +2816,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"primeicons@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "primeicons@npm:7.0.0"
+  checksum: 10c0/a7f6344d6db49e785d2040b35f8cae761d15bb8f8ee70ade8981d45438245414e913fe7235921122aade2b0a11a032c98b44dc527be2da11aa791ff145099c06
+  languageName: node
+  linkType: hard
+
 "primevue@npm:^4.4.1":
   version: 4.4.1
   resolution: "primevue@npm:4.4.1"
@@ -3468,6 +3504,16 @@ __metadata:
   bin:
     yaml: bin.mjs
   checksum: 10c0/7c587be00d9303d2ae1566e03bc5bc7fe978ba0d9bf39cc418c3139d37929dfcb93a230d9749f2cb578b6aa5d9ebebc322415e4b653cb83acd8bc0bc321707f3
+  languageName: node
+  linkType: hard
+
+"yarn@npm:^1.22.22":
+  version: 1.22.22
+  resolution: "yarn@npm:1.22.22"
+  bin:
+    yarn: bin/yarn.js
+    yarnpkg: bin/yarn.js
+  checksum: 10c0/8c77198c93d7542e7f4e131c63b66de357b7076ecfbcfe709ec0d674115c2dd9edaa45196e5510e6e9366d368707a802579e3402071002e1c9d9a99d491478de
   languageName: node
   linkType: hard
 
