@@ -11,7 +11,8 @@ export default defineConfig({
     webServer: {
         command: 'yarn vp dev --host 127.0.0.1 --port 4173 --strictPort',
         url: 'http://127.0.0.1:4173',
-        reuseExistingServer: !process.env.CI,
+        // A stale dev server can serve a half-invalidated module graph after a unit run.
+        reuseExistingServer: false,
         timeout: 120_000,
     },
 })
