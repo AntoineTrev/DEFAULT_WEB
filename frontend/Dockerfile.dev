@@ -1,7 +1,7 @@
-FROM node:20
+FROM node:24
 WORKDIR /frontend
-COPY package*.json yarn.lock ./
-RUN corepack enable && corepack prepare yarn@stable --activate
+COPY package*.json yarn.lock .yarnrc.yml ./
+RUN corepack enable && corepack prepare yarn@4.11.0 --activate
 RUN yarn install --immutable
 COPY . .
 ARG VITE_BACKEND_PORT
