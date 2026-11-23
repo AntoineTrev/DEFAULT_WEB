@@ -1,4 +1,4 @@
-import { computed, toRaw, type Ref } from 'vue'
+import { computed, toRaw } from 'vue'
 import { pb } from '@/services/pocketbase'
 import { useQuery, useMutation, useQueryCache } from '@pinia/colada'
 import { ApiErrorHandler } from '@/utils/ApiErrorHandler'
@@ -128,7 +128,7 @@ function useStore<U extends typeof BaseModel>(Model: U) {
                             return data
                     }
                 })
-                queryCache.invalidateQueries({ key })
+                void queryCache.invalidateQueries({ key })
             })
     }
 

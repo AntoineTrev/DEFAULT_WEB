@@ -23,7 +23,7 @@ abstract class BaseModel<T extends Record<string, any>> {
     }
 
     toJSON() {
-        return { ...this }
+        return Object.assign({}, this)
     }
 }
 

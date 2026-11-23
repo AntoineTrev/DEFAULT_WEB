@@ -74,7 +74,7 @@
         <div class="mt-4">
             <Button
                 label="Refetch"
-                @click="refetch"
+                @click="() => refetch()"
                 icon="pi pi-refresh" />
         </div>
 
@@ -99,10 +99,8 @@ const sortOrder = ref(-1)
 const {
     data: users,
     isLoading,
-    error,
     status,
     isPending,
-    isPlaceholderData,
     totalPages,
     totalItems,
     refetch,
