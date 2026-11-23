@@ -21,6 +21,8 @@ in `AGENTS.md`, and workflow routing only in `SKILLS.md`.
 .
 ├── README.md
 ├── backend/
+├── server/                     # admin gateway (superuser credentials stay here)
+├── scripts/                    # setup-pb.mjs, run.sh
 ├── devbox.json / devbox.lock
 ├── docker-compose.dev.yml
 ├── docker-compose.prod.yml
@@ -30,7 +32,9 @@ in `AGENTS.md`, and workflow routing only in `SKILLS.md`.
 ```
 
 - `frontend/` – Vue 3 app (Vite + TypeScript)
-- `backend/` – PocketBase with custom entrypoint
+- `backend/` – PocketBase with custom entrypoint and role/blocked hooks
+- `server/` – Node gateway for admin-only operations; the only holder of superuser credentials
+- `scripts/` – idempotent PocketBase setup and the mutually exclusive dev/prod launcher
 - `docker-compose.dev.yml` / `docker-compose.prod.yml` – container orchestration for dev/prod
 - `devbox.json` / `devbox.lock` – reproducible host toolchain (complements Docker Compose)
 - `.vite-hooks/` – Vite+ Git hooks
@@ -44,16 +48,22 @@ flowchart LR
     Devbox["Devbox<br/>host scripts"]
     VP["Vite+<br/>check · test · build"]
     FE["frontend container<br/>Caddy (prod) / Vite (dev)"]
+    GW["gateway container<br/>admin API"]
     BE["backend container<br/>PocketBase"]
     Browser["Browser"]
 
     Dev --> Devbox
     Devbox --> VP
-    Devbox -->|"up / down"| FE
+    Devbox -->|"scripts/run.sh"| FE
     VP -->|"dev server"| Browser
-    Browser --> FE
-    FE -->|"REST API"| BE
+    Browser -->|"/api, /admin-api"| FE
+    FE -->|"/api"| BE
+    FE -->|"/admin-api"| GW
+    GW -->|"superuser token"| BE
 ```
+
+The browser only talks to the frontend origin: Vite proxies in dev, Caddy in prod.
+`connect-src` is restricted to `'self'`, so no backend URL or credential is shipped to the client.
 
 Devbox is optional: without it, run the `vp` commands from `frontend/` and the
 Compose commands from the repository root.
@@ -67,13 +77,21 @@ Create a `.env` file at the root of the project base on `.env.template`:
 ```env
 # Frontend
 FRONTEND_PORT=8080
-FRONTEND_OPEN_BROWSER=false
+FRONTEND_HMR_HOST=localhost
 
-# Backend
+# Backend superuser (server-side only: backend entrypoint + admin gateway)
 BACKEND_PORT=8081
 BACKEND_ADMIN_EMAIL=
 BACKEND_ADMIN_PASSWORD=
+
+# Optional dev seed admin created by scripts/setup-pb.mjs
+ADMIN_NAME=admin
+ADMIN_EMAIL=admin@default-web.local
+ADMIN_PASSWORD=dev-admin-1234
 ```
+
+`BACKEND_ADMIN_*` is never read by the browser. The app signs in against the
+`users` collection; admin roles and blocked flags are enforced by PocketBase rules/hooks.
 
 ---
 
@@ -87,22 +105,20 @@ BACKEND_ADMIN_PASSWORD=
 
 ---
 
-## Building for Production
+## Running the stack
 
-### Docker Dev (with users fixtures)
-
-```bash
-docker-compose -f docker-compose.dev.yml up --build
-```
-
-### Docker Prod
+Use the root launcher; it always stops the other mode first, so dev and prod never run together.
 
 ```bash
-docker-compose -f docker-compose.prod.yml up --build
+scripts/run.sh dev     # dev stack: Vite + PocketBase + gateway, fixtures loaded
+scripts/run.sh prod    # prod stack: built frontend on Caddy + PocketBase + gateway
+scripts/run.sh down    # stop both modes
 ```
 
-- Frontend: `http://localhost:8080`
-- Backend: `http://localhost:8081`
+- Dev frontend: `http://localhost:${FRONTEND_PORT}` (8080 by default)
+- Dev PocketBase: `http://localhost:${BACKEND_PORT}` (8081 by default)
+- Prod: only the frontend port is published; `/api` and `/admin-api` are proxied by Caddy.
+- In dev, `scripts/setup-pb.mjs` runs after the containers are healthy and creates the app admin user idempotently.
 
 ---
 
@@ -115,14 +131,15 @@ for the local commands around them.
 ```bash
 devbox shell          # enter the reproducible shell (installs Nix packages on first use)
 devbox run setup      # install the Vite+ CLI, frontend deps and Chromium (once)
-devbox run up         # docker compose -f docker-compose.dev.yml up --build
+devbox run up         # scripts/run.sh dev (stops prod first)
+devbox run prod       # scripts/run.sh prod (stops dev first)
 devbox run dev        # frontend dev server on the host (needs backend from `up`)
 devbox run check      # vp check --deny-warnings
 devbox run test       # unit tests
 devbox run test:affected  # only tests affected since the last run (Vitest 5.1)
 devbox run e2e        # Playwright tests
 devbox run ci         # cached vp run task: check + unit tests + build
-devbox run down       # stop the Compose stack
+devbox run down       # scripts/run.sh down (both modes)
 ```
 
 ---
@@ -138,6 +155,7 @@ vp check --deny-warnings  # same, warnings fail (CI / hooks)
 vp test                   # unit tests (Vitest)
 vp test --since-last-run  # only tests affected by recent changes
 vpx tsrs --noEmit --fast  # fast standalone tsrs type-check
+vp run typecheck          # tsrs + vue-tsc (SFC templates)
 vp exec playwright test   # E2E tests (Chromium)
 vp build                  # production build
 vp run ci                 # cached check + unit tests + build

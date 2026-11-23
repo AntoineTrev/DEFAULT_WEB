@@ -11,8 +11,9 @@
             "test:affected": "cd frontend && vp test --since-last-run",
             "e2e": "cd frontend && vp exec playwright test",
             "ci": "cd frontend && vp run ci",
-            "up": "docker compose -f docker-compose.dev.yml up --build",
-            "down": "docker compose -f docker-compose.dev.yml down"
+            "up": "scripts/run.sh dev",
+            "prod": "scripts/run.sh prod",
+            "down": "scripts/run.sh down"
         }
     }
 }
