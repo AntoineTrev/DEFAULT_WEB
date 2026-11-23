@@ -2,6 +2,17 @@
 
 This repository contains a fullstack web application with a **Vue 3 frontend** and a **PocketBase backend**, fully containerized with Docker and orchestrated via Docker Compose. The frontend uses [Vite+](https://viteplus.dev/) (`vp`) as its single toolchain: Vite/Rolldown, Vitest, Oxlint, Oxfmt and Git hooks.
 
+## Documentation map
+
+| File        | Audience                                     | Answers                                                       |
+| ----------- | -------------------------------------------- | ------------------------------------------------------------- |
+| `README.md` | Everyone                                     | What the project is, how to run it, which commands exist      |
+| `AGENTS.md` | Contributors and coding agents changing code | Where to change what, invariants, validation and commit rules |
+| `SKILLS.md` | Coding agents                                | Which workflow skill to load for a given task                 |
+
+The three files complement each other: commands are listed only here, rules only
+in `AGENTS.md`, and workflow routing only in `SKILLS.md`.
+
 ---
 
 ## Project Structure
@@ -24,6 +35,28 @@ This repository contains a fullstack web application with a **Vue 3 frontend** a
 - `devbox.json` / `devbox.lock` – reproducible host toolchain (complements Docker Compose)
 - `.vite-hooks/` – Vite+ Git hooks
 - `.env.template` – Environment variables
+
+## Runtime topology
+
+```mermaid
+flowchart LR
+    Dev["Developer"]
+    Devbox["Devbox<br/>host scripts"]
+    VP["Vite+<br/>check · test · build"]
+    FE["frontend container<br/>Caddy (prod) / Vite (dev)"]
+    BE["backend container<br/>PocketBase"]
+    Browser["Browser"]
+
+    Dev --> Devbox
+    Devbox --> VP
+    Devbox -->|"up / down"| FE
+    VP -->|"dev server"| Browser
+    Browser --> FE
+    FE -->|"REST API"| BE
+```
+
+Devbox is optional: without it, run the `vp` commands from `frontend/` and the
+Compose commands from the repository root.
 
 ---
 
