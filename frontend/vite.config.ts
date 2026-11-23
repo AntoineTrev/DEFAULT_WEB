@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv, lazyPlugins } from 'vite-plus'
 import vue from '@vitejs/plugin-vue'
+import VueRouter from 'unplugin-vue-router/vite'
 import path from 'path'
 
 export default defineConfig(({ mode }) => {
@@ -18,6 +19,7 @@ export default defineConfig(({ mode }) => {
         },
         test: {
             include: ['src/**/*.test.ts'],
+            environment: 'jsdom',
         },
         staged: {
             '*': 'vp check --fix --deny-warnings',
@@ -40,15 +42,22 @@ export default defineConfig(({ mode }) => {
             tabWidth: 4,
             trailingComma: 'all',
             sortPackageJson: false,
+            ignorePatterns: ['src/typed-router.d.ts'],
         },
         envDir,
-        plugins: lazyPlugins(() => [vue()]),
+        plugins: lazyPlugins(() => [
+            vue(),
+            VueRouter({
+                routesFolder: 'src/pages',
+                dts: 'src/typed-router.d.ts',
+            }),
+        ]),
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, './src'),
             },
         },
-        base: './',
+        base: '/',
         server: {
             host: true,
             port: Number(env.VITE_FRONTEND_PORT || env.FRONTEND_PORT),
