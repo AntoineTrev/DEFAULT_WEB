@@ -4,19 +4,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
       args:
-        VITE_BACKEND_PORT: ${BACKEND_PORT}
-        VITE_BACKEND_ADMIN_EMAIL: ${BACKEND_ADMIN_EMAIL}
-        VITE_BACKEND_ADMIN_PASSWORD: ${BACKEND_ADMIN_PASSWORD}
         VITE_FRONTEND_PORT: ${FRONTEND_PORT}
     container_name: frontend
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-5173}:80"
+      - "${FRONTEND_PORT}:80"
     volumes:
       - ./frontend/config:/config
       - ./frontend/data:/data
-    env_file:
-      - .env
     networks:
       - web_network
     healthcheck:
@@ -28,17 +23,17 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+      gateway:
+        condition: service_started
   backend:
     image: ghcr.io/muchobien/pocketbase:latest
     container_name: backend
     restart: unless-stopped
-    ports:
-      - "${BACKEND_PORT}:8090"
     volumes:
       - ./backend/pb_data:/pb_data
       - ./backend/pb_public:/pb_public
       - ./backend/pb_migrations:/pb_migrations
-      - ./backend/pb_hooks:/pb_hooks
+      - ./backend/pb_hooks:/pb_hooks:ro
       - ./backend/entrypoint.sh:/entrypoint.sh
     env_file:
       - .env
@@ -51,6 +46,23 @@ services:
       retries: 5
       start_period: 10s
     entrypoint: ["/entrypoint.sh"]
+  gateway:
+    image: node:24-alpine
+    container_name: gateway
+    restart: unless-stopped
+    command: ["node", "/app/server/admin-gateway.mjs"]
+    volumes:
+      - ./server:/app/server:ro
+    environment:
+      PORT: 3001
+      PB_URL: http://backend:8090
+      PB_ADMIN_EMAIL: ${BACKEND_ADMIN_EMAIL}
+      PB_ADMIN_PASSWORD: ${BACKEND_ADMIN_PASSWORD}
+    networks:
+      - web_network
+    depends_on:
+      backend:
+        condition: service_healthy
 
 networks:
   web_network:

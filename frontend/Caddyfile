@@ -1,23 +1,37 @@
 :80 {
-    root * /var/www/html
-    encode gzip zstd
-    file_server
+	root * /var/www/html
+	encode gzip zstd
 
-    try_files {path} /index.html
+	@staticFiles {
+		path_regexp \.(ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|wasm)$
+	}
+	header @staticFiles Cache-Control "public, max-age=2592000" # 30 jours
 
-    @staticFiles {
-        path_regexp \.(ico|css|js|gif|jpe?g|png|woff2?|ttf|svg|wasm)$
-    }
-    header @staticFiles Cache-Control "public, max-age=2592000"  # 30 jours
+	header {
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), usb=()"
+	}
 
-    header {
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        X-XSS-Protection "1; mode=block"
-    }
+	handle /api/* {
+		reverse_proxy backend:8090
+	}
 
-    log {
-        output stdout
-        level INFO
-    }
+	handle /admin-api/* {
+		uri strip_prefix /admin-api
+		reverse_proxy gateway:3001
+	}
+
+	# shortcut: PocketBase's /_/ admin UI is not proxied in prod, add an authenticated route if it is ever needed
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+
+	log {
+		output stdout
+		level INFO
+	}
 }
