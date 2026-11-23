@@ -1,6 +1,34 @@
+:root {
+    color-scheme: light;
+}
+
+// Class applied by the theme store; html keeps the selector specific enough to win over PrimeVue's :root tokens.
+html.dark-mode {
+    color-scheme: dark;
+
+    --p-surface-0: #18181b;
+    --p-surface-50: #1f1f23;
+    --p-surface-100: #27272a;
+    --p-surface-200: #3f3f46;
+    --p-surface-300: #52525b;
+    --p-text-color: #f4f4f5;
+    --p-text-muted-color: #a1a1aa;
+    --p-content-background: #18181b;
+    --p-content-border-color: #3f3f46;
+    --p-primary-color: #93c5fd;
+    --p-primary-contrast-color: #0c1a2b;
+    --p-highlight-background: #1e3a5f;
+    --p-highlight-text-color: #f4f4f5;
+    --p-form-field-background: #27272a;
+    --p-dialog-background: #1f1f23;
+    --p-menu-background: #27272a;
+}
+
 body {
     margin: 0;
     padding: 0;
+    background: var(--p-surface-0, #fff);
+    color: var(--p-text-color, #18181b);
 }
 
 #app {
