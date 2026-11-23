@@ -147,3 +147,7 @@ vite.config.ts.timestamp-*
 
 # Vite+ generated hook dispatcher
 .vite-hooks/_/
+
+# Playwright
+playwright-report/
+test-results/
