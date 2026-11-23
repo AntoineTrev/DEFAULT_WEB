@@ -148,6 +148,9 @@ vite.config.ts.timestamp-*
 # Vite+ generated hook dispatcher
 .vite-hooks/_/
 
+# Devbox (devbox.lock is committed)
+.devbox/
+
 # Playwright
 playwright-report/
 test-results/

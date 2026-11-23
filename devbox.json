@@ -1,0 +1,18 @@
+{
+    "packages": ["nodejs@24"],
+    "env": {},
+    "shell": {
+        "init_hook": ["if [ -f \"$HOME/.config/vite-plus/env\" ]; then . \"$HOME/.config/vite-plus/env\"; fi"],
+        "scripts": {
+            "setup": "curl -fsSL https://vite.plus | bash && cd frontend && vp install && vp exec playwright install chromium",
+            "dev": "cd frontend && vp dev",
+            "check": "cd frontend && vp check --deny-warnings",
+            "test": "cd frontend && vp test --run",
+            "test:affected": "cd frontend && vp test --since-last-run",
+            "e2e": "cd frontend && vp exec playwright test",
+            "ci": "cd frontend && vp run ci",
+            "up": "docker compose -f docker-compose.dev.yml up --build",
+            "down": "docker compose -f docker-compose.dev.yml down"
+        }
+    }
+}
