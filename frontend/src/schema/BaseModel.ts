@@ -1,13 +1,13 @@
 export interface BaseProps {
     id: string
-    created: Date
-    updated: Date
+    created: string
+    updated: string
 }
 
 abstract class BaseModel<T extends Record<string, any>> {
     id!: string
-    created!: Date
-    updated!: Date
+    created!: string
+    updated!: string
 
     constructor(data: Partial<T>) {
         Object.assign(this, data)

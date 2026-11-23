@@ -1,0 +1,103 @@
+{
+    "common": {
+        "logout": "Se déconnecter",
+        "refresh": "Actualiser",
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "delete": "Supprimer"
+    },
+    "nav": {
+        "home": "Accueil",
+        "users": "Utilisateurs",
+        "login": "Se connecter",
+        "logout": "Se déconnecter",
+        "language": "Langue",
+        "themeLight": "Passer en mode clair",
+        "themeDark": "Passer en mode sombre",
+        "userMenu": "Menu utilisateur : {name}",
+        "administration": "Administration",
+        "changePassword": "Changer le mot de passe",
+        "changeEmail": "Changer l'e-mail",
+        "changeName": "Changer le nom",
+        "releases": "Notes de version",
+        "navigation": "Navigation principale"
+    },
+    "auth": {
+        "title": "Connexion",
+        "subtitle": "Utilisez votre compte PocketBase.",
+        "email": "E-mail",
+        "password": "Mot de passe",
+        "name": "Nom",
+        "signIn": "Se connecter",
+        "signingIn": "Connexion...",
+        "failed": "E-mail ou mot de passe invalide.",
+        "blocked": "Ce compte est bloqué. Contactez un administrateur.",
+        "register": "Créer le compte",
+        "registerTitle": "Créer un compte",
+        "haveAccount": "Vous avez déjà un compte ?",
+        "noAccount": "Pas encore de compte ?",
+        "oldPassword": "Mot de passe actuel",
+        "newPassword": "Nouveau mot de passe",
+        "passwordConfirm": "Confirmer le mot de passe",
+        "currentEmail": "E-mail actuel",
+        "newEmail": "Nouvel e-mail",
+        "changePassword": "Changer le mot de passe",
+        "changeEmail": "Changer l'e-mail",
+        "changeName": "Changer le nom",
+        "success": "Modifications enregistrées avec succès.",
+        "validation": {
+            "required": "Ce champ est obligatoire.",
+            "emailInvalid": "Saisissez une adresse e-mail valide.",
+            "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+            "passwordMismatch": "Les mots de passe ne correspondent pas.",
+            "nameTaken": "Ce nom est déjà utilisé.",
+            "emailTaken": "Cet e-mail est déjà utilisé.",
+            "sameAsCurrent": "La nouvelle valeur doit être différente de l'actuelle."
+        }
+    },
+    "users": {
+        "title": "Utilisateurs",
+        "subtitle": "Comptes enregistrés dans PocketBase.",
+        "refresh": "Actualiser",
+        "loadError": "Impossible de charger les utilisateurs.",
+        "searchPlaceholder": "Rechercher par nom ou e-mail",
+        "searchLabel": "Rechercher des utilisateurs",
+        "regionLabel": "Liste des utilisateurs",
+        "avatar": "Avatar",
+        "avatarAlt": "Avatar de {name}",
+        "name": "Nom",
+        "email": "E-mail",
+        "verified": "Vérifié",
+        "updated": "Dernière modification",
+        "yes": "Oui",
+        "no": "Non",
+        "empty": "Aucun utilisateur trouvé.",
+        "summary": "Page {page} / {totalPages} — {count} utilisateurs",
+        "block": "Bloquer",
+        "unblock": "Débloquer",
+        "blocked": "Bloqué",
+        "active": "Actif",
+        "forbidden": "Vous n'avez pas la permission d'effectuer cette action."
+    },
+    "releases": {
+        "show": "Afficher les notes de version",
+        "title": "Notes de version",
+        "close": "Fermer",
+        "empty": "Aucune note de version disponible.",
+        "description": "Changements et améliorations récents."
+    },
+    "login": {
+        "title": "Connexion",
+        "subtitle": "Utilisez un compte superutilisateur PocketBase.",
+        "email": "E-mail",
+        "password": "Mot de passe",
+        "submit": "Se connecter",
+        "signingIn": "Connexion...",
+        "failed": "E-mail ou mot de passe invalide."
+    },
+    "home": {
+        "title": "Bienvenue",
+        "subtitle": "Gérez les comptes enregistrés dans PocketBase.",
+        "viewUsers": "Voir les utilisateurs"
+    }
+}

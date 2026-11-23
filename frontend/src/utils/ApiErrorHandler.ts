@@ -11,6 +11,13 @@ export class ApiErrorHandler {
         return useToast()
     }
 
+    private static isPermanent(error: any): boolean {
+        const status = error?.status ?? error?.response?.status
+        return (
+            Boolean(error?.isAbort) || (typeof status === 'number' && status >= 400 && status < 500 && status !== 429)
+        )
+    }
+
     static logError(error: Record<string, any> | string, context?: string) {
         console.error(`[API Error] ${context ?? ''}`, error)
     }
@@ -39,14 +46,14 @@ export class ApiErrorHandler {
                 return await fn()
             } catch (error: any) {
                 this.logError(error, context)
-                if (attempt < maxRetries) {
-                    const delay = baseDelay * Math.pow(factor, attempt)
-                    console.warn(`Retrying (${attempt + 1}/${maxRetries}) in ${delay}ms...`)
-                    await new Promise(resolve => setTimeout(resolve, delay))
-                } else {
+                if (this.isPermanent(error) || attempt === maxRetries) {
                     this.showToast(error, context)
                     throw error
                 }
+
+                const delay = baseDelay * Math.pow(factor, attempt)
+                console.warn(`Retrying (${attempt + 1}/${maxRetries}) in ${delay}ms...`)
+                await new Promise(resolve => setTimeout(resolve, delay))
             }
         }
 

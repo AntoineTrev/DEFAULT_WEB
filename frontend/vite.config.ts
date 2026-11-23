@@ -6,12 +6,9 @@ export default defineConfig(({ mode }) => {
     const envDir = path.resolve(__dirname, '../')
     const env = loadEnv(mode, envDir, '')
 
-    const buildEnvForDev: Record<string, string> = {}
-    for (const key in env) {
-        if (['BACKEND_PORT', 'BACKEND_ADMIN_EMAIL', 'BACKEND_ADMIN_PASSWORD'].includes(key)) {
-            buildEnvForDev[`import.meta.env.VITE_${key}`] = JSON.stringify(env[key])
-        }
-    }
+    // Browser traffic stays same-origin; dev proxies it to the containers.
+    const backendTarget = env.VITE_BACKEND_PROXY_TARGET ?? `http://localhost:${env.BACKEND_PORT ?? 8090}`
+    const gatewayTarget = env.VITE_GATEWAY_PROXY_TARGET ?? 'http://localhost:3001'
 
     return {
         lint: {
@@ -43,7 +40,6 @@ export default defineConfig(({ mode }) => {
             tabWidth: 4,
             trailingComma: 'all',
             sortPackageJson: false,
-            ignorePatterns: [],
         },
         envDir,
         plugins: lazyPlugins(() => [vue()]),
@@ -62,12 +58,16 @@ export default defineConfig(({ mode }) => {
                 host: env.VITE_FRONTEND_HMR_HOST || env.FRONTEND_HMR_HOST || 'localhost',
                 protocol: 'ws',
             },
-        },
-        define: {
-            ...buildEnvForDev,
+            proxy: {
+                '/api': { target: backendTarget },
+                '/admin-api': {
+                    target: gatewayTarget,
+                    rewrite: route => route.replace(/^\/admin-api/, ''),
+                },
+            },
         },
         build: {
-            sourcemap: true,
+            sourcemap: mode !== 'production',
             outDir: 'dist',
             publicDir: 'public',
             manifest: true,

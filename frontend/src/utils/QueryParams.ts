@@ -1,4 +1,4 @@
-import { type Ref } from 'vue'
+import type { Ref } from 'vue'
 
 export interface QueryParams {
     page?: Ref<number>
@@ -6,26 +6,39 @@ export interface QueryParams {
     sortField?: Ref<string>
     sortOrder?: Ref<number> // 1 asc, -1 desc
     filters?: Ref<string>
-    searchableFields?: string[] // pour filtre global
+    searchableFields?: string[]
 }
 
-function buildQueryOptions(params: QueryParams) {
+export interface QueryOptions {
+    page: number
+    perPage: number
+    sort: string
+    filter: string
+    filterParams: Record<string, string>
+}
+
+const FIELD_NAME = /^[a-zA-Z_][a-zA-Z0-9_]*$/
+
+function buildQueryOptions(params: QueryParams): QueryOptions {
     const page = params.page?.value ?? 1
     const perPage = params.perPage?.value ?? 10
 
-    const sort = params.sortField?.value
-        ? `${params.sortOrder?.value === -1 ? '-' : ''}${params.sortField.value}`
-        : '-created'
+    const field = params.sortField?.value
+    const sort = field && FIELD_NAME.test(field) ? `${params.sortOrder?.value === -1 ? '-' : ''}${field}` : '-created'
 
-    let filters = ''
-    if (params.filters && params.searchableFields?.length) {
-        const q = params.searchableFields.map(f => `${f}~"${params.filters?.value?.replace(/"/g, '\\"')}"`).join(' || ')
-        filters = q
-    } else if (params.filters) {
-        filters = params.filters.value
+    const search = params.filters?.value?.trim()
+    const fields = (params.searchableFields ?? []).filter(name => FIELD_NAME.test(name))
+    if (!search || fields.length === 0) {
+        return { page, perPage, sort, filter: '', filterParams: {} }
     }
 
-    return { page, perPage, sort, filters }
+    return {
+        page,
+        perPage,
+        sort,
+        filter: fields.map(name => `${name} ~ {:search}`).join(' || '),
+        filterParams: { search },
+    }
 }
 
 export default buildQueryOptions

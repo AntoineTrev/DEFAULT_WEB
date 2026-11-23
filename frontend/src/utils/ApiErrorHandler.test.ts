@@ -38,4 +38,16 @@ describe('ApiErrorHandler.withRetry', () => {
             expect.objectContaining({ severity: 'error', summary: 'Fetch users', detail: 'final' }),
         )
     })
+
+    it('ne réessaie pas une erreur cliente permanente', async () => {
+        const error = Object.assign(new Error('forbidden'), { status: 403 })
+        const fn = vi.fn().mockRejectedValue(error)
+
+        await expect(ApiErrorHandler.withRetry(fn, { maxRetries: 3, baseDelay: 0 }, 'Fetch users')).rejects.toBe(error)
+
+        expect(fn).toHaveBeenCalledTimes(1)
+        expect(add).toHaveBeenCalledWith(
+            expect.objectContaining({ severity: 'error', summary: 'Fetch users', detail: 'forbidden' }),
+        )
+    })
 })
