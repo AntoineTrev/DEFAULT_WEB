@@ -12,6 +12,7 @@ import VueTippy, { directive as vTooltip } from 'vue-tippy'
 import App from './App.vue'
 import { i18n } from '@/i18n'
 import { router } from '@/router'
+import { loadUmami } from './umami'
 
 const app = createApp(App)
 app.use(createPinia())
@@ -27,4 +28,5 @@ app.use(VueTippy)
 app.directive('tooltip', vTooltip)
 app.use(i18n)
 app.use(router)
+loadUmami()
 app.mount('#app')
